@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSTA LKOGY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #FF5722;
+            --gradient-start: #833ab4;
+            --gradient-middle: #fd1d1d;
+            --gradient-end: #fcb045;
+            --text-color: #333;
+            --white: #ffffff;
+            --error: #ff3333;
+            --success: #4CAF50;
+            --warning: #ff9800;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(45deg, var(--gradient-start), var(--gradient-middle), var(--gradient-end));
+            min-height: 100vh;
+            color: var(--text-color);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: left;
+            margin-bottom: 30px;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .developer-credit {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .points-container {
+            text-align: center;
+        }
+
+        .points-label {
+            color: var(--text-color);
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .points-value {
+            color: var(--secondary-color);
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .button {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            width: 100%;
+            font-size: 1.1em;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .button:disabled {
+            background-color: rgba(204, 204, 204, 0.8);
+            cursor: not-allowed;
+        }
+
+        .button:disabled::after {
+            content: '✓';
+            margin-left: 10px;
+            font-size: 1.2em;
+        }
+
+        .button:hover:not(:disabled) {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .activity-button {
+            background: linear-gradient(135deg, #FF416C, #FF4B2B);
+        }
+
+        .spend-button {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            margin: 20px 0;
+            padding: 20px;
+            font-size: 1.2em;
+            border-radius: 15px;
+        }
+
+        .deposit-button {
+            background-color: rgba(102, 102, 102, 0.8);
+            font-size: 0.9em;
+            padding: 10px;
+        }
+
+        .badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .history-container {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-item.earn {
+            color: var(--success);
+        }
+
+        .history-item.spend {
+            color: var(--error);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .modal-title {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .modal-subtitle {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .confirm-button {
+            background-color: var(--success);
+            color: var(--white);
+        }
+
+        .cancel-button {
+            background-color: var(--error);
+            color: var(--white);
+        }
+
+        input[type="number"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        .cooldown {
+            font-size: 0.8em;
+            color: var(--error);
+        }
+
+        .settings-button {
+            background-color: rgba(102, 102, 102, 0.8);
+            font-size: 0.9em;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .password-group {
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            .button {
+                padding: 12px;
+            }
+
+            .points-value {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>INSTA LKOGY</h1>
+            <div class="developer-credit">
+                Developed with ❤️ by Joseph Fady
+            </div>
+        </div>
+
+        <div class="card points-container">
+            <div class="points-label">رصيد اللكوجي</div>
+            <div class="points-value">0</div>
+        </div>
+
+        <button class="button spend-button" onclick="showSpendModal()">
+            صرف لكوجي
+        </button>
+
+        <div id="activitiesList"></div>
+
+        <div class="card">
+            <h3>سجل الحركات</h3>
+            <div id="historyList" class="history-container"></div>
+        </div>
+
+        <button class="button deposit-button" onclick="showDepositModal()">
+            إيداع
+        </button>
+        <button class="button settings-button" onclick="showSettingsModal()">
+            الإعدادات
+        </button>
+    </div>
+
+    <!-- Modal for spending points -->
+    <div id="spendModal" class="modal">
+        <div class="modal-content">
+            <h3 class="modal-title">صرف لكوجي</h3>
+            <input type="number" id="spendAmount" placeholder="أدخل عدد النقاط" min="1">
+            <div class="modal-buttons">
+                <button class="modal-button confirm-button" onclick="confirmSpend()">تأكيد</button>
+                <button class="modal-button cancel-button" onclick="closeModal('spendModal')">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for deposit -->
+    <div id="depositModal" class="modal">
+        <div class="modal-content">
+            <h3 class="modal-title">إيداع لكوجي</h3>
+            <div class="modal-subtitle">خاص بالأستاذ</div>
+            <div class="password-group">
+                <input type="password" id="teacherPassword" placeholder="كلمة المرور">
+            </div>
+            <input type="number" id="depositAmount" placeholder="عدد النقاط المراد إيداعها" min="1">
+            <div class="modal-buttons">
+                <button class="modal-button confirm-button" onclick="confirmDeposit()">إيداع</button>
+                <button class="modal-button cancel-button" onclick="closeModal('depositModal')">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for settings -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <h3 class="modal-title">تغيير كلمة المرور</h3>
+            <div class="password-group">
+                <input type="password" id="currentPassword" placeholder="كلمة المرور الحالية">
+            </div>
+            <div class="password-group">
+                <input type="password" id="newPassword" placeholder="كلمة المرور الجديدة">
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-button confirm-button" onclick="changePassword()">تغيير</button>
+                <button class="modal-button cancel-button" onclick="closeModal('settingsModal')">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const TEACHER_PASSWORD = "Jo.com123"; // Default password
+
+        let state = {
+            points: 0,
+            activities: [
+                { id: 1, name: 'صليت', points: 10, icon: '🙏', lastUsed: null },
+                { id: 2, name: 'قرأت الإنجيل', points: 10, icon: '📖', lastUsed: null },
+                { id: 3, name: 'حضرت القداس', points: 10, icon: '⛪', lastUsed: null },
+                { id: 4, name: 'حضرت مدارس الأحد', points: 10, icon: '👥', lastUsed: null },
+                { id: 5, name: 'حضرت درس الكتاب', points: 10, icon: '📚', lastUsed: null },
+                { id: 6, name: 'اعترفت', points: 10, icon: '🙌', lastUsed: null },
+                { id: 7, name: 'حضرت التسبحة', points: 10, icon: '🎵', lastUsed: null },
+                { id: 8, name: 'عملت حاجة تفرح قلب ربنا', points: 10, icon: '❤️', lastUsed: null }
+            ],
+            history: [],
+            password: TEACHER_PASSWORD
+        };
+
+        function loadState() {
+            const savedState = localStorage.getItem('instaLkogyState');
+            if (savedState) {
+                state = JSON.parse(savedState);
+            }
+            resetDailyActivities();
+            updateUI();
+        }
+
+        function resetDailyActivities() {
+            const now = new Date();
+            const today = now.toDateString();
+
+            state.activities.forEach(activity => {
+                if (activity.lastUsed) {
+                    const lastUsedDate = new Date(activity.lastUsed).toDateString();
+                    if (lastUsedDate !== today) {
+                        activity.lastUsed = null;
+                    }
+                }
+            });
+        }
+
+        function saveState() {
+            localStorage.setItem('instaLkogyState', JSON.stringify(state));
+        }
+
+        function canUseActivity(activity) {
+            if (!activity.lastUsed) return true;
+            const lastUsed = new Date(activity.lastUsed);
+            const now = new Date();
+            return lastUsed.toDateString() !== now.toDateString();
+        }
+
+        function addPoints(activityId) {
+            const activity = state.activities.find(a => a.id === activityId);
+            if (activity && canUseActivity(activity)) {
+                state.points += activity.points;
+                activity.lastUsed = new Date().getTime();
+                state.history.unshift({
+                    id: Date.now(),
+                    activityName: activity.name,
+                    points: activity.points,
+                    timestamp: new Date().toLocaleString('ar-EG'),
+                    type: 'earn'
+                });
+                saveState();
+                updateUI();
+            } else {
+                alert('لقد قمت بهذا النشاط اليوم بالفعل');
+            }
+        }
+
+        function showSpendModal() {
+            document.getElementById('spendModal').style.display = 'flex';
+            document.getElementById('spendAmount').focus();
+        }
+
+        function showDepositModal() {
+            document.getElementById('depositModal').style.display = 'flex';
+            document.getElementById('teacherPassword').focus();
+        }
+
+        function showSettingsModal() {
+            document.getElementById('settingsModal').style.display = 'flex';
+            document.getElementById('currentPassword').focus();
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            if (modalId === 'depositModal') {
+                document.getElementById('teacherPassword').value = '';
+                document.getElementById('depositAmount').value = '';
+            } else if (modalId === 'spendModal') {
+                document.getElementById('spendAmount').value = '';
+            } else if (modalId === 'settingsModal') {
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+            }
+        }
+
+        function confirmSpend() {
+            const amount = parseInt(document.getElementById('spendAmount').value);
+            if (amount && amount > 0 && amount <= state.points) {
+                state.points -= amount;
+                state.history.unshift({
+                    id: Date.now(),
+                    activityName: 'صرف لكوجي',
+                    points: -amount,
+                    timestamp: new Date().toLocaleString('ar-EG'),
+                    type: 'spend'
+                });
+                saveState();
+                updateUI();
+                closeModal('spendModal');
+            } else {
+                alert('الرجاء إدخال قيمة صحيحة لا تزيد عن رصيدك الحالي');
+            }
+        }
+
+        function confirmDeposit() {
+            const password = document.getElementById('teacherPassword').value;
+            const amount = parseInt(document.getElementById('depositAmount').value);
+
+            if (password === state.password) {
+                if (amount && amount > 0) {
+                    state.points += amount;
+                    state.history.unshift({
+                        id: Date.now(),
+                        activityName: 'إيداع لكوجي',
+                        points: amount,
+                        timestamp: new Date().toLocaleString('ar-EG'),
+                        type: 'earn'
+                    });
+                    saveState();
+                    updateUI();
+                    closeModal('depositModal');
+                } else {
+                    alert('الرجاء إدخال قيمة صحيحة للإيداع');
+                }
+            } else {
+                alert('كلمة المرور غير صحيحة');
+            }
+        }
+
+        function changePassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+
+            if (currentPassword === state.password) {
+                if (newPassword && newPassword.length >= 6) {
+                    state.password = newPassword;
+                    saveState();
+                    alert('تم تغيير كلمة المرور بنجاح');
+                    closeModal('settingsModal');
+                } else {
+                    alert('كلمة المرور الجديدة يجب أن تكون 6 أحرف على الأقل');
+                }
+            } else {
+                alert('كلمة المرور الحالية غير صحيحة');
+            }
+        }
+
+        function updateUI() {
+            document.querySelector('.points-value').textContent = state.points;
+
+            const activitiesList = document.getElementById('activitiesList');
+            activitiesList.innerHTML = state.activities.map(activity => {
+                const canUse = canUseActivity(activity);
+                return `
+                    <button class="button activity-button" onclick="addPoints(${activity.id})" ${!canUse ? 'disabled' : ''}>
+                        <div>
+                            <span class="activity-icon">${activity.icon}</span>
+                            ${activity.name}
+                            ${!canUse ? '<span class="cooldown">(تم اليوم)</span>' : ''}
+                        </div>
+                        <span class="badge">+${activity.points}</span>
+                    </button>
+                `;
+            }).join('');
+
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = state.history.map(entry => `
+                <div class="history-item ${entry.type}">
+                    <div>
+                        <div>${entry.activityName}</div>
+                        <small>${entry.timestamp}</small>
+                    </div>
+                    <span class="badge">${entry.points > 0 ? '+' : ''}${entry.points}</span>
+                </div>
+            `).join('');
+        }
+
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let modal of modals) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        }
+
+        loadState();
+        setInterval(resetDailyActivities, 60000);
+    </script>
+</body>
+</html>
